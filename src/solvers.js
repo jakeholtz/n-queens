@@ -12,46 +12,27 @@
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
-[
-      [1, 0, 0, 0],
-      [0, 0, 0, 0],
-      [1, 0, 0, 0],
-      [0, 0, 0, 0]
-    ]
 
 
 window.findNRooksSolution = function(n) {
   var solution = [];
-  //create nXn array board
-  var matrix = Array(4).fill(0).map(() => Array(4).fill(0));
+  var matrix = Array(n).fill(0).map(() => Array(n).fill(0));
   var board = new Board(matrix);
   var rooksPlaced = 0;
-
-  // no col or row conflicts place the current rook at row (0) and col (0)
-  // else move one row to right and 
-console.log(board);
-  for (var row = 0; row < board.length; row++) {
-    for (var col = 0; col < board.length; col++) {
-        if(!board.hasRowConflictAt(row) && !board.hasColConflictAt(col)) {
-          board[row][col] = 1;
-          rooksPlaced++;
-        }
-        if (rooksPlaced === n) {
-          console.log(board);
-          throw board;
-        }
+  for (var row = 0; row < n; row++) {
+    for (var col = 0; col < n; col++) {
+      board.togglePiece(row, col);
+      rooksPlaced++;
+      if (board.hasRowConflictAt(row) || board.hasColConflictAt(col)) {
+        board.togglePiece(row, col);
+        rooksPlaced--;
+      }
+      if (rooksPlaced === n) {
+        console.log('Single solution for ' + n + ' rooks:', JSON.stringify(board));
+        return board.rows();
+      }
     }
   }
-    
-    //place # of rooks on board
-      //place first rook
-      // place n number left of rooks
-        // check if rook placed has any conflicts
-        // if no conflicts go with placement
-      // repeat until n number is done
-      // return the first successful board
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(board));
-  return board;
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
