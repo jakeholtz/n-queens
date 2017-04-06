@@ -79,27 +79,26 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
+      var allRows = this.rows();
+      var rowsToCheck = allRows[rowIndex];
 
-      let conflictCount = _.reduce(this.attributes[rowIndex], (acc, curr) => {
-        curr === 1 ? acc++ : null;
-        return acc;
-      }, 0);
+      var rowsOfConflictCount = _.reduce(rowsToCheck, (acc, curr) => {
+        return acc + curr;
+      });
 
-      return conflictCount > 1;
+      return rowsOfConflictCount > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      let conflictCount = 0;
+      var allRows = this.rows();
 
-      _.each(this.attributes, row => {
-        if (row.length > 0) {
-          var sumOfRow = _.reduce(row, (a, b) => { return a + b });
-          sumOfRow > 1 ? conflictCount++ : null;  
+      for (var i = 0; i < allRows.length; i++) {
+        if (this.hasRowConflictAt(i)) {
+          return true;
         }
-      });  
-
-      return conflictCount > 0;
+      }
+      return false;
     },
 
     // COLUMNS - run from top to bottom
@@ -107,13 +106,31 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var allRows = this.rows();
+
+      var columnArray = _.map(allRows, (row) => {
+          return row[colIndex];
+      });
+
+      var columnsOfConflictCount = _.reduce(columnArray, (acc, curr) => {
+        return acc + curr;
+      });
+
+      return columnsOfConflictCount > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var allRows = this.rows();
+
+      for (var i = 0; i < allRows.length; i++) {
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     },
+
 
 
 
@@ -122,12 +139,30 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var col = majorDiagonalColumnIndexAtFirstRow
+      var board = this.rows();
+      var numberOfRows = this.rows().length
+      var sumOfOnes = 0;
+      for (var row = 0; row < numberOfRows; row++) {
+        if (!!board[row][col + row]) {
+          sumOfOnes++;
+        }
+      }
+      // given "1" at position 0,0
+      // make sure there's not a "1" down one row and to the right one row
+        // do that iteratively until it's possible
+      return sumOfOnes > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var allRows = this.rows();
+      var numberOfRows = this.rows().length;
+      var conflicts = 0
+      for (var i = 1 - numberOfRows; i < numberOfRows; i++) {
+        this.hasMajorDiagonalConflictAt(i) ? conflicts++ : null;
+      }
+      return conflicts > 0;
     },
 
 
