@@ -79,15 +79,28 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+
+      let conflictCount = _.reduce(this.attributes[rowIndex], (acc, curr) => {
+        curr === 1 ? acc++ : null;
+        return acc;
+      }, 0);
+
+      return conflictCount > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      let conflictCount = 0;
+
+      _.each(this.attributes, row => {
+        if (row.length > 0) {
+          var sumOfRow = _.reduce(row, (a, b) => { return a + b });
+          sumOfRow > 1 ? conflictCount++ : null;  
+        }
+      });  
+
+      return conflictCount > 0;
     },
-
-
 
     // COLUMNS - run from top to bottom
     // --------------------------------------------------------------
