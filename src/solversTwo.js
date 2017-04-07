@@ -13,22 +13,15 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
-                       
 window.findSolution = function(row, n, board, validator, callback) {
-
-    // row             = row to begin searching at
-    // n               = length/width of board AND number of rooks/queens placed
-    // board           = board that we're search in
-    // validator       = Board.js helper function
-    // callback        = callback function
-    debugger;
+    // if all rows are exhausted
     if (row === n) {
         return callback();
     }
     //iterate over possible descisions
-    for (var col = 0; col < n; col++) {
+    for (var i = 0; i < n; i++) {
         //place a piece
-        board.togglePiece(row, col);
+        board.togglePiece(row, i);
         // recurse into remaining problem
         if (!board[validator]()) { // If no conflicts
             var result = findSolution(row + 1, n, board, validator, callback);
@@ -36,8 +29,8 @@ window.findSolution = function(row, n, board, validator, callback) {
                 return result; /// EJECT button for recur.
             }
         }
-        // unplace a piece
-        board.togglePiece(row, col);
+        // uplace a piece
+        board.togglePiece(row, i);
     }
 };
 
@@ -95,6 +88,3 @@ window.countNQueensSolutions = function(n) {
     console.log('Number of solutions for ' + n + ' queens:', solutionCount);
     return solutionCount;
 };
-
-
-
